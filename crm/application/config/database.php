@@ -84,8 +84,13 @@ if (defined('APP_DB_ENCRYPT')) {
     $db_encrypt = $app_db_encrypt;
 }
 
-$db['default'] = array_merge([
-    'dsn'          => '', // Not Supported
+// ============================================================
+// FIX: Logika array_merge dihapus, diganti array murni
+// STRICTON dipaksa FALSE di sini agar error 500 hilang
+// ============================================================
+
+$db['default'] = [
+    'dsn'          => '',
     'hostname'     => APP_DB_HOSTNAME,
     'username'     => APP_DB_USERNAME,
     'password'     => APP_DB_PASSWORD,
@@ -103,9 +108,13 @@ $db['default'] = array_merge([
     'compress'     => false,
     'failover'     => [],
     'save_queries' => true,
-], defined('APP_DB_STRICTON') && APP_DB_STRICTON || !defined('APP_DB_STRICTON') ? ['stricton' => false] : []);
+    
+    // KUNCI PERBAIKAN ADA DISINI:
+    'stricton'     => FALSE, 
+];
 
 /**
  * APP_DB_STRICTON
  * @see  https://stackoverflow.com/questions/54235523/unknown-column-strict-all-tables-setting-up-codeigniter-db-connection
  */
+
