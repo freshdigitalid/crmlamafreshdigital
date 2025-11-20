@@ -25,8 +25,8 @@
 
 				</div>
 				<div class="col-md-12">
-					<?php $this->load->view('admin/invoices/quick_stats'); ?>
-				</div>
+                    <?php // $this->load->view('admin/invoices/quick_stats'); ?>
+                    </div>
 				<?php include_once APPPATH . 'views/admin/invoices/filter_params.php'; ?>
 				<?php $this->load->view('admin/invoices/list_template'); ?>
 			</div>
@@ -41,7 +41,12 @@
 <?php init_tail(); ?>
 <script>
 	$(function() {
-		init_invoice();
+        // Saya tambahkan pengecekan keamanan agar JS tidak crash
+        if(typeof init_invoice === 'function') {
+		    init_invoice();
+        } else {
+            console.log("Fungsi init_invoice loading...");
+        }
 	});
 </script>
 </body>
