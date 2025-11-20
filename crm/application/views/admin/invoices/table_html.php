@@ -1,29 +1,58 @@
-<?php defined('BASEPATH') or exit('No direct script access allowed');
+<?php defined('BASEPATH') or exit('No direct script access allowed'); ?>
 
-$table_data = array(
-  _l('invoice_dt_table_heading_number'),
-  _l('invoice_dt_table_heading_amount'),
-  _l('invoice_total_tax'),
-  array(
-    'name'=>_l('invoice_estimate_year'),
-    'th_attrs'=>array('class'=>'not_visible')
-  ),
-  _l('invoice_dt_table_heading_date'),
-  array(
-    'name'=>_l('invoice_dt_table_heading_client'),
-    'th_attrs'=>array('class'=>(isset($client) ? 'not_visible' : ''))
-  ),
-  _l('project'),
-  _l('tags'),
-  _l('invoice_dt_table_heading_duedate'),
-  _l('invoice_dt_table_heading_status'));
-$custom_fields = get_custom_fields('invoice',array('show_on_table'=>1));
-foreach($custom_fields as $field){
-  array_push($table_data, [
-   'name' => $field['name'],
-   'th_attrs' => array('data-type'=>$field['type'], 'data-custom-field'=>1)
- ]);
-}
-$table_data = hooks()->apply_filters('invoices_table_columns', $table_data);
-render_datatable($table_data, (isset($class) ? $class : 'invoices'), [], ['id'=>$table_id ?? 'invoices']);
-?>
+<table class="table table-invoices dataTable no-footer dtr-inline" id="invoices_table_manual">
+    <thead>
+        <tr>
+            <th>#Invoice</th>
+            <th>Amount</th>
+            <th>Total Tax</th>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Project</th>
+            <th>Tags</th>
+            <th>Due Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        </tbody>
+</table>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Cek apakah jQuery sudah siap
+    if (typeof $ !== 'undefined') {
+        if (!$.fn.DataTable.isDataTable('#invoices_table_manual')) {
+             $('.table-invoices').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "<?php echo admin_url('invoices/table'); ?>",
+                    "type": "POST",
+                    "data": function(d) {
+                        // Kirim token CSRF manual jika perlu
+                        if(typeof csrfData !== 'undefined') {
+                            d[csrfData['token_name']] = csrfData['hash'];
+                        }
+                    },
+                    "error": function(xhr, error, thrown) {
+                        console.log("Error AJAX:", xhr.responseText);
+                        alert("Terjadi kesalahan saat memuat data. Cek Console (F12) untuk detail.");
+                    }
+                },
+                "columns": [
+                    { "data": "number" },   // 0
+                    { "data": "total" },    // 1
+                    { "data": "total_tax" },// 2
+                    { "data": "date" },     // 3
+                    { "data": "clientname" }, // 4
+                    { "data": "project_name" }, // 5
+                    { "data": "tags" },     // 6
+                    { "data": "duedate" },  // 7
+                    { "data": "status" }    // 8
+                ]
+            });
+        }
+    }
+});
+</script>
