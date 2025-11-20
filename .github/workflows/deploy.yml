@@ -1,0 +1,29 @@
+name: Deploy CodeIgniter 3 to Hostinger
+
+on:
+  push:
+    branches:
+      - main  # Pastikan ini sesuai dengan branch Anda (main atau master)
+
+jobs:
+  web-deploy:
+    name: 🎉 Deploy CI3
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v4
+      
+    - name: 📂 Sync files via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        server-dir: /public_html/ # Langsung ke root public_html
+        # Kita exclude file .git dan config database lokal agar tidak menimpa yang di server
+        exclude: |
+          **/.git*
+          **/.git*/**
+          .github/**
+          README.md
+          application/config/database.php
