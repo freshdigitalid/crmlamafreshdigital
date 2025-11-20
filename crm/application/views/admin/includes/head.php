@@ -31,7 +31,13 @@
             _table_api;
     </script>
     <?php app_admin_head(); ?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  // Kode patch agar $ dikenali sebagai jQuery
+  window.jQuery = window.$ = jQuery;
+</script>
 </head>
 
 <body <?= admin_body_class($bodyclass ?? ''); ?>>
+
     <?php hooks()->do_action('after_body_start'); ?>
