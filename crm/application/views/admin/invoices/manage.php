@@ -10,24 +10,16 @@
 							<h4 class="tw-my-0 tw-font-bold tw-text-xl">
 								<?= _l('invoices'); ?>
 							</h4>
-							<?php if (! isset($project)) { ?>
-							<a href="<?= admin_url('invoices/recurring'); ?>"
-								class="tw-mr-4">
-								<?= _l('invoices_list_recurring'); ?>
-								&rarr;
-							</a>
-							<?php } ?>
 						</div>
-
-						<div id="invoices_total" data-type="badge"
-							class="tw-self-start tw-mt-2 md:tw-mt-0 empty:tw-min-h-[60px]"></div>
 					</div>
-
 				</div>
-				<div class="col-md-12">
-                    <?php // $this->load->view('admin/invoices/quick_stats'); ?>
+
+                <div class="col-md-12">
+                    <div class="alert alert-info">
+                        Statistik dimatikan sementara untuk perbaikan sistem.
                     </div>
-				<?php include_once APPPATH . 'views/admin/invoices/filter_params.php'; ?>
+				</div>
+
 				<?php $this->load->view('admin/invoices/list_template'); ?>
 			</div>
 		</div>
@@ -40,15 +32,12 @@
 </script>
 <?php init_tail(); ?>
 <script>
+    // Tambahkan pengecekan agar JS tidak error
 	$(function() {
-        // Saya tambahkan pengecekan keamanan agar JS tidak crash
-        if(typeof init_invoice === 'function') {
+        if(typeof init_invoice == 'function'){
 		    init_invoice();
-        } else {
-            console.log("Fungsi init_invoice loading...");
         }
 	});
 </script>
 </body>
-
 </html>
